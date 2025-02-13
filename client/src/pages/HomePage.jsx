@@ -38,7 +38,7 @@ const HomePage = () => {
         </div>
         <img
           src="/bot.png"
-          className="w-[60%] absolute left-1/2 -translate-x-1/2 h-full object-contain botAnimation"
+          className="mainBot w-[60%] absolute left-1/2 h-full object-contain botAnimation"
           alt="bot-image"
         />
         <div className="chat flex absolute justify-center items-center bg-[#2c2937] gap-4 p-[20px] bottom-[-30px] right-[-50px] rounded-[10px]">

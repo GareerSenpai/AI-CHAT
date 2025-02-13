@@ -94,6 +94,10 @@ a {
   }
 }
 
+.mainBot {
+  translate: -50% 0;
+}
+
 .botAnimation {
   animation: botAnimation 2s ease-in-out infinite alternate;
 }
