@@ -30,7 +30,7 @@ const ChatList = () => {
         Create a new Chat
       </Link>
       <Link to="/" className="p-[10px] rounded-[10px] hover:bg-[#2c2937]">
-        Explore Lama AI
+        Explore Gareer AI
       </Link>
       <Link to="/" className="p-[10px] rounded-[10px] hover:bg-[#2c2937]">
         Contact

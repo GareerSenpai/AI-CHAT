@@ -9,13 +9,13 @@ const HomePage = () => {
   const { user, isLoaded } = useUser();
 
   return (
-    <div className="grid grid-cols-2 place-items-center h-full">
+    <div className="grid md:grid-cols-2 place-items-center h-full">
       <div className="flex flex-col justify-center items-center gap-8 h-full relative overflow-hidden">
         <img
           src="/orbital.png"
           className="absolute left-0 bottom-0 opacity-5 orbitalAnimation -z-10"
         />
-        <h1 className="heading-bg w-fit sm:text-6xl lg:text-8xl font-bold text-center">
+        <h1 className="heading-bg w-fit text-4xl sm:text-6xl font-bold text-center">
           GAREER AI
         </h1>
         <h2 className="text-2xl font-bold text-center">
@@ -32,13 +32,13 @@ const HomePage = () => {
           </Button>
         </Link>
       </div>
-      <div className="imgContainer w-[80%] h-[50%] rounded-[50px] bg-[#140e2d] relative">
+      <div className="hidden md:block imgContainer w-[80%] h-[50%] rounded-[50px] bg-[#140e2d] relative">
         <div className="bgContainer w-full h-full rounded-[50px] absolute overflow-hidden">
           <div className="bg-[url('/bg.png')] w-[200%] h-[100%] bg-[length:auto_100%] opacity-20 bgAnimation"></div>
         </div>
         <img
           src="/bot.png"
-          className="w-full h-full object-contain botAnimation"
+          className="w-[60%] absolute left-1/2 -translate-x-1/2 h-full object-contain botAnimation"
           alt="bot-image"
         />
         <div className="chat flex absolute justify-center items-center bg-[#2c2937] gap-4 p-[20px] bottom-[-30px] right-[-50px] rounded-[10px]">

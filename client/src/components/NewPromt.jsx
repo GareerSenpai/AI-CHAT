@@ -91,9 +91,9 @@ const NewPromt = ({ data: chatData }) => {
     },
     onSuccess: () => {
       console.log("Chat history updated successfully");
-      // setQuestion("");
-      // setAnswer(""); // Reset after a short delay
-      // setImg({ isLoading: false, error: null, dbData: {} });
+      setQuestion("");
+      setAnswer(""); // Reset after a short delay
+      setImg({ isLoading: false, error: null, dbData: {} });
 
       // Don't reset the UI immediately; wait for fresh data to arrive
       setTimeout(() => {
@@ -106,20 +106,7 @@ const NewPromt = ({ data: chatData }) => {
       console.log("Error updating chat history:", err);
     },
   });
-  /*************  ✨ Codeium Command ⭐  *************/
-  /**
-   * Streams an answer from the server using Server-Sent Events (SSE).
-   *
-   * @param {string} prompt - The question or prompt to be sent to the server.
-   * @param {boolean} onlyAnswer - Flag to indicate whether only the answer should be returned.
-   *
-   * Constructs query parameters including the prompt, image data, and chat ID,
-   * then initializes an EventSource to stream data from the server. Handles incoming
-   * data by appending it to the current answer and refreshing the chat list upon completion.
-   * Logs and closes the connection on errors.
-   */
 
-  /******  49822909-79e6-42aa-a469-3aafb1bcef95  *******/
   const streamAnswer = (prompt, onlyAnswer) => {
     const queryParams = new URLSearchParams({
       question: prompt,
