@@ -17,6 +17,7 @@ import SignInPage from "./pages/SignInPage.jsx";
 import SignUpPage from "./pages/SignUpPage.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import { ThemeProvider } from "./components/theme-provider.jsx";
+import { SidebarProvider } from "./contexts/SidebarProvider.jsx";
 
 const router = createBrowserRouter([
   {
@@ -69,9 +70,11 @@ const router = createBrowserRouter([
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-      <RouterProvider router={router}>
-        <App />
-      </RouterProvider>
+      <SidebarProvider>
+        <RouterProvider router={router}>
+          <App />
+        </RouterProvider>
+      </SidebarProvider>
     </ThemeProvider>
   </StrictMode>
 );

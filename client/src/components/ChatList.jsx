@@ -40,15 +40,18 @@ const ChatList = () => {
         RECENT CHATS
       </span>
       <div name="list" className="flex flex-col overflow-y-auto">
-        {userChatsData?.map((chat) => (
-          <Link
-            to={`/dashboard/chats/${chat._id}`}
-            className="p-[10px] rounded-[10px] hover:bg-[#2c2937]"
-            key={chat._id}
-          >
-            {chat.title}
-          </Link>
-        ))}
+        {userChatsData
+          ?.slice()
+          .reverse()
+          .map((chat) => (
+            <Link
+              to={`/dashboard/chats/${chat._id}`}
+              className="p-[10px] rounded-[10px] hover:bg-[#2c2937]"
+              key={chat._id}
+            >
+              {chat.title}
+            </Link>
+          ))}
       </div>
       <hr className="border-none h-[2px] bg-[#ddd] opacity-10 rounded-[5px] my-[20px] mx-0" />
       <div
