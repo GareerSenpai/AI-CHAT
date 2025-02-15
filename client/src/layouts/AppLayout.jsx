@@ -16,7 +16,7 @@ const AppLayout = () => {
   return (
     <ClerkProvider publishableKey={PUBLISHABLE_KEY} afterSignOutUrl="/">
       <QueryClientProvider client={queryClient}>
-        <div className="py-4 px-6 lg:px-8 xl:px-12 h-screen flex flex-col">
+        <div className="py-4 px-4 sm:px-6 lg:px-8 xl:px-12 h-screen flex flex-col">
           <Header />
           <main className="flex-1 overflow-hidden">
             <Outlet />

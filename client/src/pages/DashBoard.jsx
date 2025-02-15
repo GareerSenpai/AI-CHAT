@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@clerk/clerk-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import React from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 
 const DashBoard = () => {
@@ -52,14 +51,14 @@ const DashBoard = () => {
   return (
     <>
       <section className="flex-1 justify-center items-center flex flex-col gap-7">
-        <div className="flex gap-4 opacity-15 select-none">
+        <div className="flex items-center gap-4 opacity-15 select-none">
           <img src="/logo.png" alt="logo" className="h-10 md:h-16" />
           <h1 className="heading-bg text-2xl md:text-4xl xl:text-6xl font-bold">
             GAREER AI
           </h1>
         </div>
         <div
-          className="flex justify-space-between items-center gap-8 mx-4 w-[60%]"
+          className="hidden sm:flex lg:w-[50%] lg:my-4 justify-space-between items-center gap-8 mx-4 w-[60%]"
           name="options"
         >
           <div className="border border-[#555] rounded-[20px] flex-1 p-4 px-6 self-stretch">
@@ -78,7 +77,7 @@ const DashBoard = () => {
       </section>
       <form
         action=""
-        className="flex justify-center items-center bg-[#2c2937] p-0.5 rounded-[20px] w-[60%] mx-auto my-4 gap-5"
+        className="flex justify-center items-center bg-[#2c2937] p-0.5 rounded-[20px] w-full xs:w-[70%] sm:w-[60%] lg:w-[50%] mx-auto my-4 gap-5"
         onSubmit={handleSubmit}
       >
         <input

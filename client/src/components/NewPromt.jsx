@@ -203,36 +203,42 @@ const NewPromt = ({ data: chatData }) => {
         </div>
       )}
       <div className="" name="last div" ref={endChatRef} />
-      <form
-        action=""
-        className="flex justify-center items-center bg-[#2c2937] p-0.5 rounded-[20px] w-full gap-2 !mt-auto !mb-4 my-4"
-        onSubmit={handleSubmit}
-      >
-        {/* <label
+      <div className="!mt-auto xs:px-[20px]" name="form-wrapper">
+        <form
+          action=""
+          className="flex justify-center items-center bg-[#2c2937] p-0.5 rounded-[20px] w-full gap-2 !mb-4 my-4"
+          onSubmit={handleSubmit}
+        >
+          {/* <label
           htmlFor="attachment"
           className="p-[12px] rounded-[50%] bg-[#605e68] flex justify-center items-center ml-3 cursor-pointer"
         >
           <img src="/attachment.png" alt="attachment" className="w-4 h-4" />
         </label> */}
-        <Upload setImg={setImg} />
-        <input
-          type="file"
-          name="attachment"
-          id="attachment"
-          hidden
-          multiple={false}
-          accept="image/*"
-        />
-        <input
-          placeholder="Ask me anything..."
-          type="text"
-          className="p-4 rounded-[20px] flex-1 border-none outline-none bg-transparent"
-          name="prompt"
-        />
-        <Button className="p-3.5 rounded-[50%] bg-[#605e68] flex justify-center items-center mr-3">
-          <img src="/arrow.png" alt="submit-button" className="w-full h-full" />
-        </Button>
-      </form>
+          <Upload setImg={setImg} />
+          <input
+            type="file"
+            name="attachment"
+            id="attachment"
+            hidden
+            multiple={false}
+            accept="image/*"
+          />
+          <input
+            placeholder="Ask me anything..."
+            type="text"
+            className="p-4 rounded-[20px] flex-1 border-none outline-none bg-transparent"
+            name="prompt"
+          />
+          <Button className="p-3.5 rounded-[50%] bg-[#605e68] flex justify-center items-center mr-3">
+            <img
+              src="/arrow.png"
+              alt="submit-button"
+              className="w-full h-full"
+            />
+          </Button>
+        </form>
+      </div>
     </>
   );
 };

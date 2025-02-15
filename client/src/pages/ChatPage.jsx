@@ -1,7 +1,8 @@
 import NewPromt from "@/components/NewPromt";
+import { SidebarContext } from "@/contexts/SidebarProvider";
 import { useQuery } from "@tanstack/react-query";
 import { IKImage } from "imagekitio-react";
-import React, { useEffect, useRef } from "react";
+import React, { useContext, useEffect, useRef } from "react";
 import Markdown from "react-markdown";
 import { useLocation, useParams } from "react-router-dom";
 import remarkGfm from "remark-gfm";
@@ -9,6 +10,7 @@ import remarkGfm from "remark-gfm";
 const ChatPage = () => {
   const path = useLocation().pathname;
   const chatId = path.split("/").pop();
+  const { isSidebarOpen } = useContext(SidebarContext);
 
   const {
     isPending,
@@ -31,7 +33,12 @@ const ChatPage = () => {
         className="flex-1 flex justify-center overflow-y-auto w-full"
         name="wrapper"
       >
-        <div className="w-1/2 flex flex-col space-y-2.5" name="chat">
+        <div
+          className={`flex flex-col w-full sm:w-[65%] lg:${
+            isSidebarOpen ? "w-[65%]" : "w-[50%]"
+          } space-y-2.5 transition-all duration-300`}
+          name="chat"
+        >
           {chatData?.history?.map((message) => (
             <>
               <div className="self-end">
