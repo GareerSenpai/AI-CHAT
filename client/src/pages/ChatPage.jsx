@@ -54,7 +54,7 @@ const ChatPage = () => {
               <div
                 className={`p-[20px] ${
                   message.role === "user" &&
-                  "rounded-[12px] bg-[#2c2937] self-end max-w-[80%]"
+                  "rounded-[12px] bg-[#2c2937] self-end max-w-[80%] break-words"
                 }`}
                 name="message"
                 key={message.id}
