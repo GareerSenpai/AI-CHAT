@@ -1,12 +1,15 @@
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@clerk/clerk-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useRef } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 
 const DashBoard = () => {
   const { userId } = useAuth();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+
+  const textareaRef = useRef(null);
 
   const mutation = useMutation({
     mutationFn: async (text) => {
@@ -77,16 +80,33 @@ const DashBoard = () => {
       </section>
       <form
         action=""
-        className="flex justify-center items-center bg-[#2c2937] p-0.5 rounded-[20px] w-full xs:w-[70%] sm:w-[60%] lg:w-[50%] mx-auto my-4 gap-5"
+        className="flex justify-center items-center bg-[#2c2937] p-1 rounded-[20px] w-full xs:w-[70%] sm:w-[60%] lg:w-[50%] mx-auto my-4 gap-5"
         onSubmit={handleSubmit}
       >
-        <input
+        <textarea
           placeholder="Ask me anything..."
           type="text"
           name="text"
-          className="p-4 rounded-[20px] flex-1 border-none outline-none bg-transparent"
+          ref={textareaRef}
+          rows={1}
+          className="p-4 rounded-[20px] resize-none max-h-[200px] whitespace-pre-wrap flex-1 border-none outline-none bg-transparent"
+          onInput={(e) => {
+            e.target.style.height = "auto";
+            e.target.style.height = `${e.target.scrollHeight}px`;
+          }}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && !e.shiftKey) {
+              e.preventDefault();
+              textareaRef.current.style.height = "auto";
+              e.target.form.requestSubmit();
+              e.target.value = "";
+            }
+          }}
         />
-        <Button className="p-3.5 rounded-[50%] bg-[#605e68] flex justify-center items-center mr-3">
+        <Button
+          type="submit"
+          className="p-3.5 rounded-[50%] bg-[#605e68] flex justify-center items-center mr-3"
+        >
           <img src="/arrow.png" alt="submit-button" className="w-full h-full" />
         </Button>
       </form>

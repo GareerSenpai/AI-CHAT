@@ -15,6 +15,8 @@ const NewPromt = ({ data: chatData }) => {
     dbData: {},
   });
 
+  const textareaRef = useRef(null);
+
   console.log(img.dbData);
 
   const endChatRef = useRef(null);
@@ -22,6 +24,11 @@ const NewPromt = ({ data: chatData }) => {
   useEffect(() => {
     endChatRef.current.scrollIntoView({ behavior: "smooth" });
   }, [chatData, question, answer, img.dbData]);
+
+  // useEffect(() => {
+  //   textareaRef.current.style.height = "auto";
+  //   textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+  // });
 
   useEffect(() => {
     console.log(chatData);
@@ -172,6 +179,7 @@ const NewPromt = ({ data: chatData }) => {
     e.target.reset();
 
     if (!prompt) return;
+
     setQuestion(prompt);
     // mutation.mutate({ question: prompt, onlyAnswer: false });
     streamAnswer(prompt, false);
@@ -206,7 +214,7 @@ const NewPromt = ({ data: chatData }) => {
       <div className="!mt-auto xs:px-[20px]" name="form-wrapper">
         <form
           action=""
-          className="flex justify-center items-center bg-[#2c2937] p-0.5 rounded-[20px] w-full gap-2 !mb-4 my-4"
+          className="flex justify-center items-center bg-[#2c2937] p-1 rounded-[20px] w-full gap-2 !mb-4 my-4"
           onSubmit={handleSubmit}
         >
           {/* <label
@@ -224,11 +232,24 @@ const NewPromt = ({ data: chatData }) => {
             multiple={false}
             accept="image/*"
           />
-          <input
+          <textarea
+            ref={textareaRef}
             placeholder="Ask me anything..."
             type="text"
-            className="p-4 rounded-[20px] flex-1 border-none outline-none bg-transparent"
+            className="p-4 rounded-[20px] flex-1 border-none outline-none resize-none max-h-[200px] whitespace-pre-wrap bg-transparent"
             name="prompt"
+            rows={1}
+            onInput={(e) => {
+              e.target.style.height = "auto";
+              e.target.style.height = `${e.target.scrollHeight}px`;
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                textareaRef.current.style.height = "auto";
+                e.target.form.requestSubmit();
+              }
+            }}
           />
           <Button className="p-3.5 rounded-[50%] bg-[#605e68] flex justify-center items-center mr-3">
             <img
