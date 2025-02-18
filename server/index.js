@@ -20,8 +20,21 @@ const imagekit = new ImageKit({
 
 app.use(
   cors({
-    origin: process.env.CLIENT_URL,
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+    origin: [process.env.CLIENT_URL, process.env.LOCAL_CLIENT_URL],
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: [
+      "X-CSRF-Token",
+      "X-Requested-With",
+      "Content-Range",
+      "Accept",
+      "Accept-Version",
+      "Content-Length",
+      "Content-MD5",
+      "Content-Type",
+      "Date",
+      "X-Api-Version",
+      "Authorization",
+    ],
     credentials: true,
   })
 );
