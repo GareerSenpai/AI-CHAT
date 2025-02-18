@@ -8,7 +8,7 @@ import getAnswer from "./ai/getAnswers.js";
 import connectDB from "./db/index.js";
 import { UserChats } from "./models/userChats.models.js";
 import { Chat } from "./models/chat.models.js";
-import { ClerkExpressRequireAuth } from "@clerk/clerk-sdk-node";
+import { clerkClient, ClerkExpressRequireAuth } from "@clerk/clerk-sdk-node";
 
 const PORT = process.env.PORT || 3000;
 const app = express();
@@ -150,14 +150,33 @@ app.post("/api/generate", ClerkExpressRequireAuth(), async (req, res) => {
   const { userId } = req.auth;
 
   try {
-    const { question, image, chatId, onlyAnswer } = req.body;
-    // const { question, image, chatId, onlyAnswer } = req.query; // for SSE
+    const { question, image: imgObject, chatId, onlyAnswer } = req.body;
 
-    console.log(question, image, chatId, onlyAnswer);
+    console.log(question, imgObject, chatId, onlyAnswer);
+
+    let image =
+      imgObject && imgObject.filePath && imgObject.url && imgObject.name
+        ? {
+            filePath: imgObject.filePath,
+            url: imgObject.url,
+            name: imgObject.name,
+          }
+        : undefined;
 
     if (!question) {
       return res.status(400).send("Question is required");
     }
+
+    const chatData = await Chat.findOne({ _id: chatId, userId });
+
+    if (!chatData) {
+      return res.status(500).json("Chat not found");
+    }
+    const history =
+      chatData?.history?.map(({ role, parts }) => ({
+        role,
+        parts: parts.map(({ text }) => ({ text })), // Keep text inside an object
+      })) || [];
 
     res.setHeader("Content-Type", "text/event-stream");
     res.setHeader("Cache-Control", "no-cache");
@@ -165,25 +184,24 @@ app.post("/api/generate", ClerkExpressRequireAuth(), async (req, res) => {
 
     // const answer = await getAnswer(model, question, image);
     let answer = "";
-
-    const answerStream = await getAnswer(model, question, image);
-    for await (const chunk of answerStream) {
-      process.stdout.write(chunk); // Print each chunk as it arrives
-      res.write(chunk);
-      answer += chunk;
-    }
-    process.stdout.write("\n data: [DONE]\n");
-    res.write("data: [DONE]\n");
-
-    answer += "\n\n data: [DONE]";
-
-    // console.log(answer);
-
-    // console.log(image?.dbData?.filePath);
-
     let newItems;
 
-    console.log(onlyAnswer);
+    const answerStream = await getAnswer(model, question, image, history);
+    for await (const chunk of answerStream) {
+      // process.stdout.write(chunk); // Print each chunk as it arrives
+      res.write(`data: ${chunk}\n\n`);
+      answer += chunk;
+    }
+
+    if (!res.writableEnded) {
+      res.write(`data: [DONE]\n\n`);
+      res.end();
+    }
+
+    req.on("close", () => {
+      console.log("Connection closed");
+      res.end();
+    });
 
     if (onlyAnswer) {
       newItems = [
@@ -210,22 +228,22 @@ app.post("/api/generate", ClerkExpressRequireAuth(), async (req, res) => {
       ];
     }
 
-    const updatedChat = await Chat.updateOne(
-      { _id: chatId, userId },
-      {
-        $push: {
-          history: {
-            $each: newItems,
-          },
-        },
-      },
-      {
-        new: true,
-      }
-    );
-    // console.log(answer);
-    // res.send(answer);
-    res.end();
+    // const updatedChat = await Chat.updateOne(
+    //   { _id: chatId, userId },
+    //   {
+    //     $push: {
+    //       history: {
+    //         $each: newItems,
+    //       },
+    //     },
+    //   },
+    //   {
+    //     new: true,
+    //   }
+    // );
+
+    chatData.history.push(...newItems); // Append new items to history
+    const updatedChat = await chatData.save(); // Save the updated document
   } catch (error) {
     console.log("Error while generating answer: ", error);
     res.status(500).json("Error while generating answer!");
