@@ -13,14 +13,17 @@ const DashBoard = () => {
 
   const mutation = useMutation({
     mutationFn: async (text) => {
-      const response = await fetch("http://localhost:3000/api/chats", {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ text, userId }),
-      });
+      const response = await fetch(
+        "${import.meta.env.SERVER_BASE_URL}/api/chats",
+        {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ text, userId }),
+        }
+      );
 
       // Ensure the request was successful and extract the response data
       if (!response.ok) {

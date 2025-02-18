@@ -10,7 +10,7 @@ const ChatList = () => {
   } = useQuery({
     queryKey: ["userChats"],
     queryFn: () =>
-      fetch("http://localhost:3000/api/userchats", {
+      fetch(`${import.meta.env.SERVER_BASE_URL}/api/userchats`, {
         credentials: "include",
       })
         .then((res) => res.json())
