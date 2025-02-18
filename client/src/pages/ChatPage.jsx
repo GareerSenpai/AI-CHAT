@@ -19,7 +19,7 @@ const ChatPage = () => {
   } = useQuery({
     queryKey: ["chat", chatId],
     queryFn: () =>
-      fetch(`${import.meta.env.SERVER_BASE_URL}/api/chats/${chatId}`, {
+      fetch(`${import.meta.env.VITE_SERVER_BASE_URL}/api/chats/${chatId}`, {
         credentials: "include",
       })
         .then((res) => res.json())

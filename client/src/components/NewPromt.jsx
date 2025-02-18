@@ -50,7 +50,7 @@ const NewPromt = ({ data: chatData }) => {
 
   // const mutation = useMutation({
   //   mutationFn: async ({ question, onlyAnswer = false }) => {
-  //     const response = await fetch(`${import.meta.env.SERVER_BASE_URL}/api/generate`, {
+  //     const response = await fetch(`${import.meta.env.VITE_SERVER_BASE_URL}/api/generate`, {
   //       method: "POST",
   //       headers: {
   //         "Content-Type": "application/json",
@@ -126,7 +126,7 @@ const NewPromt = ({ data: chatData }) => {
 
     const eventSource = new EventSource(
       `${
-        import.meta.env.SERVER_BASE_URL
+        import.meta.env.VITE_SERVER_BASE_URL
       }/api/generateSSE?${queryParams.toString()}`,
       { withCredentials: true }
     );
@@ -149,7 +149,7 @@ const NewPromt = ({ data: chatData }) => {
   // const fetchAnswer = async (question) => {
   //   if (!question) return;
   //   try {
-  //     const response = await fetch(`${import.meta.env.SERVER_BASE_URL}/api/generate`, {
+  //     const response = await fetch(`${import.meta.env.VITE_SERVER_BASE_URL}/api/generate`, {
   //       method: "POST",
   //       headers: {
   //         "Content-Type": "application/json",

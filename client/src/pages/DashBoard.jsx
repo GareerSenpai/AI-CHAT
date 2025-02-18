@@ -14,7 +14,7 @@ const DashBoard = () => {
   const mutation = useMutation({
     mutationFn: async (text) => {
       const response = await fetch(
-        "${import.meta.env.SERVER_BASE_URL}/api/chats",
+        `${import.meta.env.VITE_SERVER_BASE_URL}/api/chats`,
         {
           method: "POST",
           credentials: "include",

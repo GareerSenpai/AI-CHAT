@@ -6,7 +6,7 @@ const urlEndpoint = import.meta.env.VITE_IMAGEKIT_ENDPOINT;
 const authenticator = async () => {
   try {
     const response = await fetch(
-      `${import.meta.env.SERVER_BASE_URL}/api/upload`
+      `${import.meta.env.VITE_SERVER_BASE_URL}/api/upload`
     );
 
     if (!response.ok) {
