@@ -118,6 +118,9 @@ const NewPromt = ({ data: chatData }) => {
   });
 
   const streamAnswer = async (prompt, onlyAnswer) => {
+    const token = await getToken();
+    console.log("token: ", token);
+
     const queryParams = new URLSearchParams({
       question: prompt,
       onlyAnswer, // You can pass true or false based on your use case
@@ -125,6 +128,7 @@ const NewPromt = ({ data: chatData }) => {
       imageFilePath: img.dbData.filePath || "",
       imageURL: img.dbData.url || "",
       imageName: img.dbData.name || "",
+      token: token,
     });
 
     const eventSource = new EventSource(
@@ -133,7 +137,6 @@ const NewPromt = ({ data: chatData }) => {
       }/api/generateSSE?${queryParams.toString()}`,
       {
         withCredentials: true,
-        headers: { Authorization: `Bearer ${await getToken()}` },
       }
     );
 
