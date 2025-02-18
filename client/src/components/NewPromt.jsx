@@ -39,121 +39,143 @@ const NewPromt = ({ data: chatData }) => {
       const lastMessage = chatData.history[chatData.history.length - 1];
 
       if (lastMessage.role === "user") {
-        // mutation.mutate({
-        //   question: lastMessage.parts[0].text,
-        //   onlyAnswer: true,
-        // });
-        streamAnswer(lastMessage.parts[0].text, true);
+        mutation.mutate({
+          question: lastMessage.parts[0].text,
+          onlyAnswer: true,
+        });
+        // streamAnswer(lastMessage.parts[0].text, true);
       }
     }
   }, [chatData]);
 
   const queryClient = useQueryClient();
 
-  // const mutation = useMutation({
-  //   mutationFn: async ({ question, onlyAnswer = false }) => {
-  //     const response = await fetch(`${import.meta.env.VITE_SERVER_BASE_URL}/api/generate`, {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         Authorization: `Bearer ${await getToken()}`,
-  //       },
-  //       body: JSON.stringify({
-  //         question,
-  //         image: img.dbData,
-  //         chatId: chatData._id,
-  //         onlyAnswer,
-  //       }),
-  //       credentials: "include",
-  //     });
-
-  //     if (!response.ok) {
-  //       const errorText = await response.text();
-  //       throw new Error(
-  //         `Request failed with status ${response.status}: ${errorText}`
-  //       );
-  //     }
-
-  //     const data = await response.text();
-  //     return data;
-  //   },
-
-  //   onSuccess: (data) => {
-  //     if (data) {
-  //       setQuestion("");
-  //       setAnswer("");
-  //       setImg({ isLoading: false, error: null, dbData: {} });
-  //       queryClient.invalidateQueries({ queryKey: ["chat", chatData._id] });
-  //     } else {
-  //       console.error("Answer not found in response");
-  //     }
-  //   },
-
-  //   onError: (err) => {
-  //     console.log("Error", err);
-  //   },
-  // });
-
-  /* ✅ React Query ONLY updates chat history after streaming */
   const mutation = useMutation({
-    mutationFn: async (chatId) => {
-      queryClient.invalidateQueries({ queryKey: ["chat", chatId] }); // Refresh chat
-    },
-    onSuccess: () => {
-      console.log("Chat history updated successfully");
-      setQuestion("");
-      setAnswer(""); // Reset after a short delay
-      setImg({ isLoading: false, error: null, dbData: {} });
+    mutationFn: async ({ question, onlyAnswer = false }) => {
+      const response = await fetch(
+        `${import.meta.env.VITE_SERVER_BASE_URL}/api/generate`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${await getToken()}`,
+          },
+          body: JSON.stringify({
+            question,
+            image: img.dbData,
+            chatId: chatData._id,
+            onlyAnswer,
+          }),
+          credentials: "include",
+        }
+      );
 
-      // Don't reset the UI immediately; wait for fresh data to arrive
-      setTimeout(() => {
-        setQuestion("");
-        setAnswer(""); // Reset after a short delay
-        setImg({ isLoading: false, error: null, dbData: {} });
-      }, 100); // Small delay to prevent UI flicker
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(
+          `Request failed with status ${response.status}: ${errorText}`
+        );
+      }
+
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let accumulatedText = "";
+
+      while (true) {
+        const { value, done } = await reader.read();
+        if (done) break;
+
+        const chunk = decoder.decode(value);
+        const lines = chunk.split("\n");
+
+        for (const line of lines) {
+          if (line.startsWith("data:")) {
+            const data = line.replace("data:", "").trim();
+            if (data === "[DONE]") {
+              break;
+            }
+            accumulatedText += data;
+            setAnswer((prev) => [...prev, data]); // Append streamed chunk
+          }
+        }
+      }
+
+      return accumulatedText;
     },
+
+    onSuccess: (data) => {
+      if (data) {
+        setQuestion("");
+        setAnswer([]);
+        setImg({ isLoading: false, error: null, dbData: {} });
+        queryClient.invalidateQueries({ queryKey: ["chat", chatData._id] });
+      } else {
+        console.error("Answer not found in response");
+      }
+    },
+
     onError: (err) => {
-      console.log("Error updating chat history:", err);
+      console.log("Error", err);
     },
   });
 
-  const streamAnswer = async (prompt, onlyAnswer) => {
-    const token = await getToken();
-    console.log("token: ", token);
+  /* ✅ React Query ONLY updates chat history after streaming */
+  // const mutation = useMutation({
+  //   mutationFn: async (chatId) => {
+  //     queryClient.invalidateQueries({ queryKey: ["chat", chatId] }); // Refresh chat
+  //   },
+  //   onSuccess: () => {
+  //     console.log("Chat history updated successfully");
+  //     setQuestion("");
+  //     setAnswer(""); // Reset after a short delay
+  //     setImg({ isLoading: false, error: null, dbData: {} });
 
-    const queryParams = new URLSearchParams({
-      question: prompt,
-      onlyAnswer, // You can pass true or false based on your use case
-      chatId: chatData._id,
-      imageFilePath: img.dbData.filePath || "",
-      imageURL: img.dbData.url || "",
-      imageName: img.dbData.name || "",
-      token: token,
-    });
+  //     // Don't reset the UI immediately; wait for fresh data to arrive
+  //     setTimeout(() => {
+  //       setQuestion("");
+  //       setAnswer(""); // Reset after a short delay
+  //       setImg({ isLoading: false, error: null, dbData: {} });
+  //     }, 100); // Small delay to prevent UI flicker
+  //   },
+  //   onError: (err) => {
+  //     console.log("Error updating chat history:", err);
+  //   },
+  // });
 
-    const eventSource = new EventSource(
-      `${
-        import.meta.env.VITE_SERVER_BASE_URL
-      }/api/generateSSE?${queryParams.toString()}`,
-      {
-        withCredentials: true,
-      }
-    );
+  /* SSE approach */
+  // const streamAnswer = async (prompt, onlyAnswer) => {
+  //   const queryParams = new URLSearchParams({
+  //     question: prompt,
+  //     onlyAnswer, // You can pass true or false based on your use case
+  //     chatId: chatData._id,
+  //     imageFilePath: img.dbData.filePath || "",
+  //     imageURL: img.dbData.url || "",
+  //     imageName: img.dbData.name || "",
+  //   });
 
-    eventSource.onmessage = (event) => {
-      if (event.data === "[DONE]") {
-        eventSource.close(); // Close when response is complete
-        mutation.mutate(chatData._id); // Refresh chat list
-      } else {
-        setAnswer((prev) => [...prev, event.data]); // Append streamed chunk
-      }
-    };
+  //   const eventSource = new EventSource(
+  //     `${
+  //       import.meta.env.VITE_SERVER_BASE_URL
+  //     }/api/generateSSE?${queryParams.toString()}`,
+  //     {
+  //       withCredentials: true,
+  //     }
+  //   );
 
-    eventSource.onerror = (error) => {
-      console.error("SSE Error:", error);
-      eventSource.close(); // Close on error
-    };
-  };
+  //   eventSource.onmessage = (event) => {
+  //     if (event.data === "[DONE]") {
+  //       eventSource.close(); // Close when response is complete
+  //       mutation.mutate(chatData._id); // Refresh chat list
+  //     } else {
+  //       setAnswer((prev) => [...prev, event.data]); // Append streamed chunk
+  //     }
+  //   };
+
+  //   eventSource.onerror = (error) => {
+  //     console.error("SSE Error:", error);
+  //     eventSource.close(); // Close on error
+  //   };
+  // };
 
   // const fetchAnswer = async (question) => {
   //   if (!question) return;
@@ -193,8 +215,8 @@ const NewPromt = ({ data: chatData }) => {
     if (!prompt) return;
 
     setQuestion(prompt);
-    // mutation.mutate({ question: prompt, onlyAnswer: false });
-    streamAnswer(prompt, false);
+    mutation.mutate({ question: prompt, onlyAnswer: false });
+    // streamAnswer(prompt, false);
   };
 
   return (
