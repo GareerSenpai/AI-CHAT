@@ -17,7 +17,7 @@ const imagekit = new ImageKit({
   privateKey: process.env.IMAGEKIT_PRIVATE_KEY,
   urlEndpoint: process.env.IMAGEKIT_ENDPOINT,
 });
-
+/*
 app.use(
   cors({
     origin: "https://gareer-ai.vercel.app",
@@ -38,6 +38,7 @@ app.use(
     credentials: true,
   })
 );
+*/
 
 // Custom CORS handling
 // app.use((req, res, next) => {
