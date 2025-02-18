@@ -21,35 +21,44 @@ const imagekit = new ImageKit({
 app.use(
   cors({
     origin: "https://gareer-ai.vercel.app",
-    // methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-    // allowedHeaders: [
-    //   "X-CSRF-Token",
-    //   "X-Requested-With",
-    //   "Content-Range",
-    //   "Accept",
-    //   "Accept-Version",
-    //   "Content-Length",
-    //   "Content-MD5",
-    //   "Content-Type",
-    //   "Date",
-    //   "X-Api-Version",
-    //   "Authorization",
-    // ],
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: [
+      "X-CSRF-Token",
+      "X-Requested-With",
+      "Content-Range",
+      "Accept",
+      "Accept-Version",
+      "Content-Length",
+      "Content-MD5",
+      "Content-Type",
+      "Date",
+      "X-Api-Version",
+      "Authorization",
+    ],
     credentials: true,
   })
 );
 
 // Custom CORS handling
-app.use((req, res, next) => {
+// app.use((req, res, next) => {
+//   res.header("Access-Control-Allow-Origin", "https://gareer-ai.vercel.app");
+//   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+//   res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+//   res.header("Access-Control-Allow-Credentials", "true");
+
+//   if (req.method === "OPTIONS") {
+//     return res.sendStatus(200);
+//   }
+//   next();
+// });
+
+// Manually handling Preflight OPTIONS requests
+app.options("*", (req, res) => {
   res.header("Access-Control-Allow-Origin", "https://gareer-ai.vercel.app");
   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
   res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
   res.header("Access-Control-Allow-Credentials", "true");
-
-  if (req.method === "OPTIONS") {
-    return res.sendStatus(200);
-  }
-  next();
+  res.sendStatus(200);
 });
 
 app.use(express.json());
