@@ -20,7 +20,7 @@ const imagekit = new ImageKit({
 
 app.use(
   cors({
-    origin: ["https://gareer-ai"],
+    origin: process.env.CLIENT_URL,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     credentials: true,
   })
