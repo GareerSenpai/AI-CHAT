@@ -1,17 +1,20 @@
+import { useAuth } from "@clerk/clerk-react";
 import { useQuery } from "@tanstack/react-query";
 import React from "react";
 import { Link } from "react-router-dom";
 
 const ChatList = () => {
+  const { getToken } = useAuth();
   const {
     isPending,
     error,
     data: userChatsData,
   } = useQuery({
     queryKey: ["userChats"],
-    queryFn: () =>
+    queryFn: async () =>
       fetch(`${import.meta.env.VITE_SERVER_BASE_URL}/api/userchats`, {
         credentials: "include",
+        headers: { Authorization: `Bearer ${await getToken()}` },
       })
         .then((res) => res.json())
         .catch((err) => console.log(err)),
