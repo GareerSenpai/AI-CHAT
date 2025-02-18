@@ -20,7 +20,7 @@ const imagekit = new ImageKit({
 
 app.use(
   cors({
-    origin: "*",
+    origin: process.env.CLIENT_URL,
     credentials: true,
   })
 );
