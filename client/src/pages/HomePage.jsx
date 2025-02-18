@@ -8,8 +8,6 @@ const HomePage = () => {
   const [typingStatus, setTypingStatus] = useState("human1");
   const { user, isLoaded } = useUser();
 
-  if (user) console.log(user);
-
   return (
     <div className="grid md:grid-cols-2 place-items-center h-full">
       <div className="flex flex-col justify-center items-center gap-8 h-full relative overflow-hidden">
