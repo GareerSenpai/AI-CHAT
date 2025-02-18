@@ -5,8 +5,10 @@ import { IKImage } from "imagekitio-react";
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useAuth } from "@clerk/clerk-react";
 
 const NewPromt = ({ data: chatData }) => {
+  const { getToken } = useAuth();
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState([]);
   const [img, setImg] = useState({
@@ -54,6 +56,7 @@ const NewPromt = ({ data: chatData }) => {
   //       method: "POST",
   //       headers: {
   //         "Content-Type": "application/json",
+  //         Authorization: `Bearer ${await getToken()}`,
   //       },
   //       body: JSON.stringify({
   //         question,
@@ -114,7 +117,7 @@ const NewPromt = ({ data: chatData }) => {
     },
   });
 
-  const streamAnswer = (prompt, onlyAnswer) => {
+  const streamAnswer = async (prompt, onlyAnswer) => {
     const queryParams = new URLSearchParams({
       question: prompt,
       onlyAnswer, // You can pass true or false based on your use case
@@ -128,7 +131,10 @@ const NewPromt = ({ data: chatData }) => {
       `${
         import.meta.env.VITE_SERVER_BASE_URL
       }/api/generateSSE?${queryParams.toString()}`,
-      { withCredentials: true }
+      {
+        withCredentials: true,
+        headers: { Authorization: `Bearer ${await getToken()}` },
+      }
     );
 
     eventSource.onmessage = (event) => {
@@ -153,6 +159,7 @@ const NewPromt = ({ data: chatData }) => {
   //       method: "POST",
   //       headers: {
   //         "Content-Type": "application/json",
+  //         Authorization: `Bearer ${await getToken()}`,
   //       },
   //       body: JSON.stringify({ question, image: img.dbData }),
   //       credentials: "include",

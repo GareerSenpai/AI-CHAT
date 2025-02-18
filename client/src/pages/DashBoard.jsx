@@ -6,6 +6,7 @@ import { Outlet, useNavigate } from "react-router-dom";
 
 const DashBoard = () => {
   const { userId } = useAuth();
+  const { getToken } = useAuth();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
@@ -20,6 +21,7 @@ const DashBoard = () => {
           credentials: "include",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${await getToken()}`,
           },
           body: JSON.stringify({ text, userId }),
         }

@@ -1,5 +1,6 @@
 import NewPromt from "@/components/NewPromt";
 import { SidebarContext } from "@/contexts/SidebarProvider";
+import { useAuth } from "@clerk/clerk-react";
 import { useQuery } from "@tanstack/react-query";
 import { IKImage } from "imagekitio-react";
 import React, { useContext, useEffect, useRef } from "react";
@@ -11,6 +12,7 @@ const ChatPage = () => {
   const path = useLocation().pathname;
   const chatId = path.split("/").pop();
   const { isSidebarOpen } = useContext(SidebarContext);
+  const { getToken } = useAuth();
 
   const {
     isPending,
@@ -18,9 +20,10 @@ const ChatPage = () => {
     data: chatData,
   } = useQuery({
     queryKey: ["chat", chatId],
-    queryFn: () =>
+    queryFn: async () =>
       fetch(`${import.meta.env.VITE_SERVER_BASE_URL}/api/chats/${chatId}`, {
         credentials: "include",
+        headers: { Authorization: `Bearer ${await getToken()}` },
       })
         .then((res) => res.json())
         .catch((err) => console.log(err)),
