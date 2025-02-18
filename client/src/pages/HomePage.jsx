@@ -16,7 +16,7 @@ const HomePage = () => {
           className="absolute left-0 bottom-0 opacity-5 orbitalAnimation -z-10"
         />
         <h1 className="heading-bg w-fit text-4xl sm:text-6xl font-bold text-center">
-          GAREER AI jalsdnakjdn
+          GAREER AI
         </h1>
         <h2 className="text-2xl font-bold text-center">
           Supercharge your creativity and productivity
