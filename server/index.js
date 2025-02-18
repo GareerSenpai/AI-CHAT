@@ -21,20 +21,20 @@ const imagekit = new ImageKit({
 app.use(
   cors({
     origin: "https://gareer-ai.vercel.app",
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-    allowedHeaders: [
-      "X-CSRF-Token",
-      "X-Requested-With",
-      "Content-Range",
-      "Accept",
-      "Accept-Version",
-      "Content-Length",
-      "Content-MD5",
-      "Content-Type",
-      "Date",
-      "X-Api-Version",
-      "Authorization",
-    ],
+    // methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    // allowedHeaders: [
+    //   "X-CSRF-Token",
+    //   "X-Requested-With",
+    //   "Content-Range",
+    //   "Accept",
+    //   "Accept-Version",
+    //   "Content-Length",
+    //   "Content-MD5",
+    //   "Content-Type",
+    //   "Date",
+    //   "X-Api-Version",
+    //   "Authorization",
+    // ],
     credentials: true,
   })
 );
