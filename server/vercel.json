@@ -14,7 +14,7 @@
         { "key": "Access-Control-Allow-Credentials", "value": "true" },
         {
           "key": "Access-Control-Allow-Origin",
-          "value": "https://gareer-ai-backend.vercel.app"
+          "value": "https://gareer-ai.vercel.app"
         },
         {
           "key": "Access-Control-Allow-Methods",
