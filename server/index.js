@@ -20,7 +20,7 @@ const imagekit = new ImageKit({
 
 app.use(
   cors({
-    origin: [process.env.CLIENT_URL, process.env.LOCAL_CLIENT_URL],
+    origin: "https://gareer-ai.vercel.app",
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allowedHeaders: [
       "X-CSRF-Token",
@@ -38,6 +38,10 @@ app.use(
     credentials: true,
   })
 );
+
+// Handle preflight requests
+// app.options("*", cors());
+
 app.use(express.json());
 
 app.get("/api/upload", (req, res) => {
