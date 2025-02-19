@@ -63,6 +63,10 @@ app.options("*", (req, res) => {
 
 app.use(express.json());
 
+app.get("/", (req, res) => {
+  res.send("Server is up and running!");
+});
+
 app.get("/api/upload", (req, res) => {
   const result = imagekit.getAuthenticationParameters();
   res.send(result);
