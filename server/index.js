@@ -20,7 +20,7 @@ const imagekit = new ImageKit({
 
 app.use(
   cors({
-    origin: "https://gareer-ai.vercel.app",
+    origin: [process.env.LOCAL_CLIENT_URL, process.env.CLIENT_URL],
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allowedHeaders: [
       "X-CSRF-Token",
