@@ -27,11 +27,7 @@ const Header = () => {
         to="/"
         className="mr-auto :hover:cursor-pointer flex gap-2 items-center"
       >
-        <img
-          src="../../public/logo.png"
-          alt="logo"
-          className="inline-block h-8"
-        />
+        <img src="/logo.png" alt="logo" className="inline-block h-8" />
         <span>GAREER AI</span>
       </Link>
 
