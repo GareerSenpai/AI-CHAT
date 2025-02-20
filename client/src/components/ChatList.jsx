@@ -19,10 +19,10 @@ const ChatList = () => {
         .then((res) => res.json())
         .catch((err) => console.log(err)),
   });
-  console.log(userChatsData);
+  // console.log(userChatsData);
 
   return (
-    <div name="chatList" className="flex flex-col h-full">
+    <div name="sidebar" className="flex flex-col h-full">
       <span name="title" className="font-semibold text-[10px] mb-[10px]">
         DASHBOARD
       </span>
