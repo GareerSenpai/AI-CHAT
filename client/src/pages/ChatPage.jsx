@@ -3,7 +3,7 @@ import { SidebarContext } from "@/contexts/SidebarProvider";
 import { useAuth } from "@clerk/clerk-react";
 import { useQuery } from "@tanstack/react-query";
 import { IKImage } from "imagekitio-react";
-import React, { useContext, useEffect, useRef } from "react";
+import React, { useContext, useRef } from "react";
 import Markdown from "react-markdown";
 import { useLocation, useParams } from "react-router-dom";
 import remarkGfm from "remark-gfm";
