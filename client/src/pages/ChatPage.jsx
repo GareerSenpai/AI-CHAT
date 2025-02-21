@@ -3,7 +3,7 @@ import { SidebarContext } from "@/contexts/SidebarProvider";
 import { useAuth } from "@clerk/clerk-react";
 import { useQuery } from "@tanstack/react-query";
 import { IKImage } from "imagekitio-react";
-import React, { useContext, useRef } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import Markdown from "react-markdown";
 import { useLocation, useParams } from "react-router-dom";
 import remarkGfm from "remark-gfm";
@@ -13,6 +13,14 @@ const ChatPage = () => {
   const chatId = path.split("/").pop();
   const { isSidebarOpen } = useContext(SidebarContext);
   const { getToken } = useAuth();
+
+  const [newQuestion, setNewQuestion] = useState("");
+  const [newAnswer, setNewAnswer] = useState("");
+  const [img, setImg] = useState({
+    isLoading: false,
+    error: null,
+    dbData: {},
+  });
 
   const {
     isPending,
@@ -28,7 +36,18 @@ const ChatPage = () => {
         .then((res) => res.json())
         .catch((err) => console.log(err)),
   });
-  // console.log(chatData);
+
+  useEffect(() => {
+    if (chatData) {
+      setNewQuestion("");
+      setNewAnswer("");
+      setImg({
+        isLoading: false,
+        error: null,
+        dbData: {},
+      });
+    }
+  }, [chatData]);
 
   return (
     <div className="flex flex-col h-full items-center" name="chatPage">
@@ -72,7 +91,15 @@ const ChatPage = () => {
               </div>
             </>
           ))}
-          <NewPromt data={chatData} />
+          <NewPromt
+            data={chatData}
+            newQuestion={newQuestion}
+            setNewQuestion={setNewQuestion}
+            newAnswer={newAnswer}
+            setNewAnswer={setNewAnswer}
+            img={img}
+            setImg={setImg}
+          />
         </div>
       </div>
     </div>

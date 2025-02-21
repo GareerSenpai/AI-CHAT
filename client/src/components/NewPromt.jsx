@@ -7,15 +7,16 @@ import remarkGfm from "remark-gfm";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@clerk/clerk-react";
 
-const NewPromt = ({ data: chatData }) => {
+const NewPromt = ({
+  data: chatData,
+  newQuestion: question,
+  setNewQuestion: setQuestion,
+  setNewAnswer: setAnswer,
+  newAnswer: answer,
+  img,
+  setImg,
+}) => {
   const { getToken } = useAuth();
-  const [question, setQuestion] = useState("");
-  const [answer, setAnswer] = useState([]);
-  const [img, setImg] = useState({
-    isLoading: false,
-    error: null,
-    dbData: {},
-  });
 
   const textareaRef = useRef(null);
 
@@ -99,11 +100,9 @@ const NewPromt = ({ data: chatData }) => {
 
     onSuccess: (data) => {
       if (data) {
-        console.log(data);
-
-        setQuestion("");
-        setAnswer([]);
-        setImg({ isLoading: false, error: null, dbData: {} });
+        // setQuestion("");
+        // setAnswer([]);
+        // setImg({ isLoading: false, error: null, dbData: {} });
         queryClient.invalidateQueries({ queryKey: ["chat", chatData._id] });
       } else {
         console.error("Answer not found in response");
