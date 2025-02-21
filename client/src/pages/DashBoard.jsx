@@ -85,7 +85,7 @@ const DashBoard = () => {
       </section>
       <form
         action=""
-        className="flex justify-center items-center bg-[#2c2937] p-1 rounded-[20px] w-full xs:w-[70%] sm:w-[60%] lg:w-[50%] mx-auto my-4 gap-5"
+        className="flex justify-center items-center bg-[#2c2937] p-1 rounded-[20px] w-full xs:w-[80%] sm:w-[60%] lg:w-[50%] mx-auto my-4 gap-5"
         onSubmit={handleSubmit}
       >
         <textarea
