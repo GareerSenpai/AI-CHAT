@@ -19,7 +19,7 @@ const NewPromt = ({ data: chatData }) => {
 
   const textareaRef = useRef(null);
 
-  console.log(img.dbData);
+  console.log("img dbData: ", img.dbData);
 
   const endChatRef = useRef(null);
 
@@ -27,13 +27,8 @@ const NewPromt = ({ data: chatData }) => {
     endChatRef.current.scrollIntoView({ behavior: "smooth" });
   }, [chatData, question, answer, img.dbData]);
 
-  // useEffect(() => {
-  //   textareaRef.current.style.height = "auto";
-  //   textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
-  // });
-
   useEffect(() => {
-    console.log(chatData);
+    console.log("chat data: ", chatData);
 
     if (chatData && chatData.history?.length > 0) {
       const lastMessage = chatData.history[chatData.history.length - 1];
@@ -43,7 +38,6 @@ const NewPromt = ({ data: chatData }) => {
           question: lastMessage.parts[0].text,
           onlyAnswer: true,
         });
-        // streamAnswer(lastMessage.parts[0].text, true);
       }
     }
   }, [chatData]);
@@ -105,6 +99,8 @@ const NewPromt = ({ data: chatData }) => {
 
     onSuccess: (data) => {
       if (data) {
+        console.log(data);
+
         setQuestion("");
         setAnswer([]);
         setImg({ isLoading: false, error: null, dbData: {} });
@@ -119,91 +115,6 @@ const NewPromt = ({ data: chatData }) => {
     },
   });
 
-  /* ✅ React Query ONLY updates chat history after streaming */
-  // const mutation = useMutation({
-  //   mutationFn: async (chatId) => {
-  //     queryClient.invalidateQueries({ queryKey: ["chat", chatId] }); // Refresh chat
-  //   },
-  //   onSuccess: () => {
-  //     console.log("Chat history updated successfully");
-  //     setQuestion("");
-  //     setAnswer(""); // Reset after a short delay
-  //     setImg({ isLoading: false, error: null, dbData: {} });
-
-  //     // Don't reset the UI immediately; wait for fresh data to arrive
-  //     setTimeout(() => {
-  //       setQuestion("");
-  //       setAnswer(""); // Reset after a short delay
-  //       setImg({ isLoading: false, error: null, dbData: {} });
-  //     }, 100); // Small delay to prevent UI flicker
-  //   },
-  //   onError: (err) => {
-  //     console.log("Error updating chat history:", err);
-  //   },
-  // });
-
-  /* SSE approach */
-  // const streamAnswer = async (prompt, onlyAnswer) => {
-  //   const queryParams = new URLSearchParams({
-  //     question: prompt,
-  //     onlyAnswer, // You can pass true or false based on your use case
-  //     chatId: chatData._id,
-  //     imageFilePath: img.dbData.filePath || "",
-  //     imageURL: img.dbData.url || "",
-  //     imageName: img.dbData.name || "",
-  //   });
-
-  //   const eventSource = new EventSource(
-  //     `${
-  //       import.meta.env.VITE_SERVER_BASE_URL
-  //     }/api/generateSSE?${queryParams.toString()}`,
-  //     {
-  //       withCredentials: true,
-  //     }
-  //   );
-
-  //   eventSource.onmessage = (event) => {
-  //     if (event.data === "[DONE]") {
-  //       eventSource.close(); // Close when response is complete
-  //       mutation.mutate(chatData._id); // Refresh chat list
-  //     } else {
-  //       setAnswer((prev) => [...prev, event.data]); // Append streamed chunk
-  //     }
-  //   };
-
-  //   eventSource.onerror = (error) => {
-  //     console.error("SSE Error:", error);
-  //     eventSource.close(); // Close on error
-  //   };
-  // };
-
-  // const fetchAnswer = async (question) => {
-  //   if (!question) return;
-  //   try {
-  //     const response = await fetch(`${import.meta.env.VITE_SERVER_BASE_URL}/api/generate`, {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         Authorization: `Bearer ${await getToken()}`,
-  //       },
-  //       body: JSON.stringify({ question, image: img.dbData }),
-  //       credentials: "include",
-  //     });
-
-  //     if (!response.ok) {
-  //       const errorText = await response.text();
-  //       throw new Error(
-  //         `Request failed with status ${response.status}: ${errorText}`
-  //       );
-  //     }
-
-  //     const data = await response.text();
-  //     return data;
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -216,7 +127,6 @@ const NewPromt = ({ data: chatData }) => {
 
     setQuestion(prompt);
     mutation.mutate({ question: prompt, onlyAnswer: false });
-    // streamAnswer(prompt, false);
   };
 
   return (
